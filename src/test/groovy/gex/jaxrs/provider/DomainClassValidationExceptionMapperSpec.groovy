@@ -1,6 +1,7 @@
 package gex.jaxrs.provider
 
 import gex.commons.exception.DomainClassValidationException
+import gex.jaxrs.ApiResponse
 import org.springframework.validation.DataBinder
 import spock.lang.Ignore
 import spock.lang.Specification
@@ -13,6 +14,10 @@ class DomainClassValidationExceptionMapperSpec extends Specification {
 
   def 'dd'() {
     given:
+      ApiResponse apiResponse = GroovySpy(ApiResponse, global: true)
+      //apiResponse.unprocessableEntity(_) >> Mock(Response)
+      //apiResponse.unprocessableEntity(_, _, _, _) >> Mock(Response)
+
       def e = new DomainClassValidationExceptionMapper()
       def exceptionn = new DomainClassValidationException(new Object())
       e.toResponse(exceptionn)
