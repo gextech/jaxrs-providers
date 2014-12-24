@@ -2,6 +2,7 @@ package gex.jaxrs.provider
 
 import gex.commons.exception.DomainClassValidationException
 import gex.jaxrs.ApiResponse
+import org.springframework.context.ApplicationContext
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -30,8 +31,9 @@ class DomainClassValidationExceptionMapperSpec extends Specification {
       mockResponse.getStatus() >> 422
       ApiResponse apiResponse = Spy(ApiResponse)
       apiResponse.buildResponse(_, _) >> mockResponse
+      ApplicationContext applicationContext = Mock(ApplicationContext)
 
-      def e = new DomainClassValidationExceptionMapper(apiResponse: apiResponse)
+      def e = new DomainClassValidationExceptionMapper(apiResponse: apiResponse, applicationContext: applicationContext)
 
     when:
       def response = e.toResponse(new DomainClassValidationException(new Object()))
