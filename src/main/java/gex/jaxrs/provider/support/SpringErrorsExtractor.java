@@ -20,16 +20,17 @@ public class SpringErrorsExtractor {
   public List<String> extractError(Errors errors, MessageSource messageSource) {
     notNull(errors, "The errors can not be null");
     notNull(messageSource, "The messageSource can not be null");
-    return errors.getFieldErrors().stream().map(fieldError -> {
-      return asList(fieldError.getCodes()).stream().map(code -> {
-        log.debug("Searching code: '{}' with arguments '{}' and locale '{}'", code, fieldError.getArguments(), getLocale());
-        return messageSource.getMessage(code, fieldError.getArguments(), "", getLocale());
-      }).filter(StringUtils::hasText).findFirst().orElseGet(() -> {
-          log.debug("Searching code: '{}' with arguments '{}', defaultMessage '{}' and locale '{}'", fieldError.getCode(), fieldError.getArguments(), fieldError.getDefaultMessage(), getLocale());
-          return messageSource.getMessage(fieldError.getCode(), fieldError.getArguments(), fieldError.getDefaultMessage(), getLocale());
-        }
-      );
-
-    }).collect(toList());
+    return errors.getFieldErrors().stream()
+      .map(fieldError -> {
+        return asList(fieldError.getCodes()).stream()
+          .map(code -> {
+            log.debug("Searching code: '{}' with arguments '{}' and locale '{}'", code, fieldError.getArguments(), getLocale());
+            return messageSource.getMessage(code, fieldError.getArguments(), "", getLocale());
+          }).filter(StringUtils::hasText).findFirst().orElseGet(() -> {
+              log.debug("Searching code: '{}' with arguments '{}', defaultMessage '{}' and locale '{}'", fieldError.getCode(), fieldError.getArguments(), fieldError.getDefaultMessage(), getLocale());
+              return messageSource.getMessage(fieldError.getCode(), fieldError.getArguments(), fieldError.getDefaultMessage(), getLocale());
+            }
+          );
+      }).collect(toList());
   }
 }
