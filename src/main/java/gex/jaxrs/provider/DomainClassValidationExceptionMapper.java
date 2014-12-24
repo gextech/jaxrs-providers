@@ -55,11 +55,7 @@ public class DomainClassValidationExceptionMapper implements ExceptionMapper<Dom
     Field errorsField = findField(entity.getClass(), "errors", Errors.class);
     Errors errors = null;
     if (errorsField != null) {
-      try {
-        errors = (Errors) getField(errorsField, entity);
-      } catch (IllegalStateException e) {
-        log.info("The entity '{}' has no errors field", entity.getClass().getName());
-      }
+      errors = (Errors) getField(errorsField, entity);
     }
     return errors;
   }
@@ -68,11 +64,7 @@ public class DomainClassValidationExceptionMapper implements ExceptionMapper<Dom
     Errors errors = null;
     Method errorsMethod = findMethod(entity.getClass(), "getErrors", Errors.class);
     if (errorsMethod != null) {
-      try {
-        errors = (Errors) invokeMethod(errorsMethod, entity);
-      } catch (IllegalStateException e) {
-        log.info("The entity '{}' has no getErrors method", entity.getClass().getName());
-      }
+      errors = (Errors) invokeMethod(errorsMethod, entity);
     }
 
     return errors;
