@@ -1,7 +1,9 @@
 package gex.jaxrs.provider;
 
 import gex.commons.exception.DomainClassValidationException;
+import gex.jaxrs.ApiResponse;
 import gex.jaxrs.provider.support.SpringErrorsExtractor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +16,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static gex.jaxrs.ApiResponse.unprocessableEntity;
 import static org.springframework.util.ReflectionUtils.*;
 
 /**
@@ -23,19 +24,25 @@ import static org.springframework.util.ReflectionUtils.*;
 @Slf4j
 @Provider
 public class DomainClassValidationExceptionMapper implements ExceptionMapper<DomainClassValidationException> {
+  @Setter
+  @Autowired
   private ApplicationContext applicationContext;
+  @Setter
+  @Autowired
+  private ApiResponse apiResponse;
 
   @Override
   public Response toResponse(DomainClassValidationException exception) {
+    log.debug(apiResponse.getClass().getName());
     Object entity = exception.getEntity();
 
     Errors errors = getErrors(entity);
     if (errors != null) {
       List<String> errorList = new SpringErrorsExtractor().extractError(errors, applicationContext);
-      return unprocessableEntity(exception.getMessage(), errorList);
+      return apiResponse.unprocessableEntity(exception.getMessage(), errorList);
     }
 
-    return unprocessableEntity(exception.getMessage());
+    return apiResponse.unprocessableEntity(exception.getMessage());
   }
 
   private Errors getErrors(Object entity) {
@@ -51,6 +58,7 @@ public class DomainClassValidationExceptionMapper implements ExceptionMapper<Dom
       try {
         errors = (Errors) getField(errorsField, entity);
       } catch (IllegalStateException e) {
+        log.info("The entity '{}' has no errors field", entity.getClass().getName());
       }
     }
     return errors;
@@ -63,14 +71,11 @@ public class DomainClassValidationExceptionMapper implements ExceptionMapper<Dom
       try {
         errors = (Errors) invokeMethod(errorsMethod, entity);
       } catch (IllegalStateException e) {
+        log.info("The entity '{}' has no getErrors method", entity.getClass().getName());
       }
     }
 
     return errors;
   }
 
-  @Autowired
-  public void setApplicationContext(ApplicationContext applicationContext) {
-    this.applicationContext = applicationContext;
-  }
 }

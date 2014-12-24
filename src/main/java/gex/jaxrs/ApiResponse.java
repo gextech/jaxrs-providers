@@ -2,7 +2,7 @@ package gex.jaxrs;
 
 import gex.commons.exception.GenericException;
 import gex.commons.exception.ObjectNotFoundException;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
@@ -13,71 +13,61 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static javax.ws.rs.core.Response.Status.*;
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 /**
  * Created by domix on 12/24/14.
  */
+@Component
 public class ApiResponse {
-  public static Response ok(Object entity) {
-    return Response.status(OK)
-      .entity(entity)
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response ok(Object entity) {
+    return buildResponse(OK.getStatusCode(), entity);
   }
 
-  public static Response created(Object entity) {
-    return Response.status(CREATED)
-      .entity(entity)
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response created(Object entity) {
+    return buildResponse(CREATED.getStatusCode(), entity);
   }
 
-  public static Response noContent() {
-    return Response.status(NO_CONTENT)
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response noContent() {
+    return buildResponse(NO_CONTENT.getStatusCode(), null);
   }
 
-  public static Response unprocessableEntity(String message) {
+  public Response unprocessableEntity(String message) {
     return unprocessableEntity(message, emptyList());
   }
 
-  public static Response unprocessableEntity(String message, List validationErrors) {
+  public Response unprocessableEntity(String message, List validationErrors) {
     return unprocessableEntity(message, validationErrors, "");
   }
 
-  public static Response unprocessableEntity(String message, List validationErrors, String code) {
+  public Response unprocessableEntity(String message, List validationErrors, String code) {
     return unprocessableEntity(message, validationErrors, code, emptyMap());
   }
 
-  public static Response unprocessableEntity(String message, List validationErrors, String code, Map extraData) {
-    return Response.status(422)
-      .entity(genericError(message, validationErrors, code, extraData))
+  public Response unprocessableEntity(String message, List validationErrors, String code, Map extraData) {
+    Map<String, Object> entity = genericError(message, validationErrors, code, extraData);
+    return buildResponse(422, entity);
+  }
+
+  public Response buildResponse(Integer status, Object entity) {
+    return Response.status(status)
+      .entity(entity)
       .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
+      .language(getLocale())
       .build();
   }
 
-  public static Response badRequest(String message) {
-    return Response.status(BAD_REQUEST)
-      .entity(genericError(message))
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response badRequest(String message) {
+    Map<String, Object> entity = genericError(message);
+    return buildResponse(BAD_REQUEST.getStatusCode(), entity);
   }
 
-  public static Response badRequestFromException(GenericException e) {
-    return Response.status(BAD_REQUEST)
-      .entity(getObjectError(e))
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response badRequestFromException(GenericException e) {
+    Map<String, Object> entity = getObjectError(e);
+    return buildResponse(BAD_REQUEST.getStatusCode(), entity);
   }
 
-  private static Map<String, Object> getObjectError(GenericException e) {
+  private Map<String, Object> getObjectError(GenericException e) {
     Map<String, Object> error = new HashMap<>();
     error.put("message", e.getMessage());
     error.put("validationErrors", e.getValidationErrors());
@@ -87,84 +77,56 @@ public class ApiResponse {
     return error;
   }
 
-  public static Response badRequestWithValidationErrors(String message, List validationErrors) {
-    return Response.status(BAD_REQUEST)
-      .entity(genericError(message, validationErrors))
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response badRequestWithValidationErrors(String message, List validationErrors) {
+    Map<String, Object> entity = genericError(message, validationErrors);
+    return buildResponse(BAD_REQUEST.getStatusCode(), entity);
   }
 
-  public static Response badRequestWithExtraData(String message, Map<String, Object> extraData) {
-    return Response.status(BAD_REQUEST)
-      .entity(genericError(message, emptyList(), "", extraData))
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response badRequestWithExtraData(String message, Map<String, Object> extraData) {
+    Map<String, Object> entity = genericError(message, emptyList(), "", extraData);
+    return buildResponse(BAD_REQUEST.getStatusCode(), entity);
   }
 
-  public static Response notFound(String message) {
-    return notFoundResponseBuilder(genericError(message)).build();
+  public Response notFound(String message) {
+    Map<String, Object> entity = genericError(message);
+    return buildResponse(NOT_FOUND.getStatusCode(), entity);
   }
 
-  public static Response notFoundFromException(GenericException e) {
-    return Response.status(NOT_FOUND)
-      .entity(getObjectError(e))
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+  public Response notFoundFromException(GenericException e) {
+    Map<String, Object> entity = getObjectError(e);
+    return buildResponse(NOT_FOUND.getStatusCode(), entity);
   }
 
-  public static Response notFoundFromException(ObjectNotFoundException e) {
+  public Response notFoundFromException(ObjectNotFoundException e) {
     Map<String, Object> objectError = getObjectError(e);
-
     objectError.put("identifier", e.getIdentifier());
     objectError.put("entityName", e.getEntityName());
 
-    return Response.status(NOT_FOUND)
-      .entity(objectError)
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
+    return buildResponse(NOT_FOUND.getStatusCode(), objectError);
   }
 
-  public static Response.ResponseBuilder notFoundResponseBuilder(String message) {
-    return notFoundResponseBuilder(genericError(message));
+  public Response notFoundExtraData(String message, Map<String, Object> info) {
+    Map<String, Object> entity = genericError(message, emptyList(), "", info);
+    return buildResponse(NOT_FOUND.getStatusCode(), entity);
   }
 
-  public static Response.ResponseBuilder notFoundResponseBuilder(Object entity) {
-    return Response.status(NOT_FOUND)
-      .entity(entity)
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale());
-  }
-
-
-  public static Response notFoundExtraData(String message, Map<String, Object> info) {
-    return Response.status(NOT_FOUND)
-      .entity(genericError(message, emptyList(), "", info))
-      .type(APPLICATION_JSON_TYPE)
-      .language(LocaleContextHolder.getLocale())
-      .build();
-  }
-
-  public static Map<String, Object> genericError(String message) {
+  public Map<String, Object> genericError(String message) {
     return genericError(message, emptyList());
   }
 
-  public static Map<String, Object> genericError(String message, List validationErrors) {
+  public Map<String, Object> genericError(String message, List validationErrors) {
     return genericError(message, validationErrors, "");
   }
 
-  public static Map<String, Object> genericError(String message, List validationErrors, String code) {
+  public Map<String, Object> genericError(String message, List validationErrors, String code) {
     return genericError(message, validationErrors, code, emptyMap());
   }
 
-  public static Map<String, Object> genericError(String message, List validationErrors, String code, Map extraData) {
+  public Map<String, Object> genericError(String message, List validationErrors, String code, Map extraData) {
     return genericError(message, validationErrors, code, extraData, "");
   }
 
-  public static Map<String, Object> genericError(String message, List validationErrors, String code, Map extraData, String i18nCode) {
+  public Map<String, Object> genericError(String message, List validationErrors, String code, Map extraData, String i18nCode) {
     Map<String, Object> error = new HashMap<>();
     error.put("message", message);
     error.put("validationErrors", validationErrors);
