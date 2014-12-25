@@ -68,7 +68,7 @@ public class ApiResponse {
   }
 
   private Map<String, Object> getObjectError(GenericException e) {
-    return genericError(e.getMessage(), e.getValidationErrors(), e.getI18nCode(), e.getExtraData(), e.getI18nCode());
+    return genericError(e.getMessage(), e.getValidationErrors(), e.getCode(), e.getExtraData(), e.getI18nCode());
   }
 
   public Response badRequestWithValidationErrors(String message, List validationErrors) {
