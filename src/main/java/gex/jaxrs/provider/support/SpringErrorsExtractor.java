@@ -7,8 +7,8 @@ import org.springframework.validation.Errors;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.of;
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 import static org.springframework.util.Assert.notNull;
 
@@ -22,7 +22,7 @@ public class SpringErrorsExtractor {
     notNull(messageSource, "The messageSource can not be null");
     return errors.getFieldErrors().stream()
       .map(fieldError -> {
-        return asList(fieldError.getCodes()).stream()
+        return of(fieldError.getCodes())
           .map(code -> {
             log.debug("Searching code: '{}' with arguments '{}' and locale '{}'", code, fieldError.getArguments(), getLocale());
             return messageSource.getMessage(code, fieldError.getArguments(), "", getLocale());
