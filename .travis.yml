@@ -1,3 +1,9 @@
+sudo: false
+
+cache:
+  directories:
+  - $HOME/.gradle
+
 language: groovy
 
 jdk:
@@ -8,5 +14,3 @@ env:
 
 after_success:
 - ./gradlew jacocoTestReport coveralls
-
-sudo: false
