@@ -1,4 +1,13 @@
 
+0.0.3 / 2014-12-26
+==================
+
+  * polish code
+  * added some tests
+  * added some more Providers (GenericExceptionExceptionMapper/ObjectNotFoundExceptionExceptionMapper)
+  * use a bit more Stream API
+  * adding caching in travis build
+
 0.0.2 / 2014-12-25
 ==================
 
