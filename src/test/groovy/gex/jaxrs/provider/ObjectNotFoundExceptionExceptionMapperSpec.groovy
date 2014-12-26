@@ -1,6 +1,5 @@
 package gex.jaxrs.provider
 
-import gex.commons.exception.GenericException
 import gex.commons.exception.ObjectNotFoundException
 import gex.jaxrs.ApiResponse
 import spock.lang.Specification
@@ -15,7 +14,7 @@ class ObjectNotFoundExceptionExceptionMapperSpec extends Specification {
     setup:
       ApiResponse apiResponse = Spy(ApiResponse)
       apiResponse.buildResponse(_, _) >> Mock(Response)
-      def exception = new ObjectNotFoundException('id','fail')
+      def exception = new ObjectNotFoundException('id', 'fail')
       def exceptionMapper = new ObjectNotFoundExceptionExceptionMapper(apiResponse: apiResponse)
     when:
       def response = exceptionMapper.toResponse(exception)
