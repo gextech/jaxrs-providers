@@ -50,11 +50,7 @@ public class ApiResponse {
   }
 
   public Response buildResponse(Integer status, Object entity) {
-    return Response.status(status)
-      .entity(entity)
-      .type(APPLICATION_JSON_TYPE)
-      .language(getLocale())
-      .build();
+    return Response.status(status).entity(entity).type(APPLICATION_JSON_TYPE).language(getLocale()).build();
   }
 
   public Response badRequest(String message) {
