@@ -12,5 +12,8 @@ jdk:
 env:
 - TERM=dumb
 
+before_script:
+- ./gradlew clean
+
 script:
-- ./gradlew clean test jacocoTestReport coveralls
+- ./gradlew test jacocoTestReport coveralls
