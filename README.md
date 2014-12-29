@@ -18,6 +18,10 @@ Environment
 -----------
 
 [!["JDK"](https://img.shields.io/badge/JDK-8.0+-F30000.svg?style=flat)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+[!["Jersey"](https://img.shields.io/badge/Jersey-2.14-FFA82B.svg?style=flat)](https://jersey.java.net/)
+[!["Spring"](https://img.shields.io/badge/Spring-4.1.3-green.svg?style=flat)](http://projects.spring.io/spring-framework/)
+
+image: &["Spring Boot", link="http://docs.spring.io/spring-boot/docs/1.2.0.RELEASE/reference/htmlsingle/"]
 
 GitHub, Factoids and Stats
 --------------------------
