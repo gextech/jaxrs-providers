@@ -21,8 +21,6 @@ Environment
 [!["Jersey"](https://img.shields.io/badge/Jersey-2.14-FFA82B.svg?style=flat)](https://jersey.java.net/)
 [!["Spring"](https://img.shields.io/badge/Spring-4.1.3-green.svg?style=flat)](http://projects.spring.io/spring-framework/)
 
-image: &["Spring Boot", link="http://docs.spring.io/spring-boot/docs/1.2.0.RELEASE/reference/htmlsingle/"]
-
 GitHub, Factoids and Stats
 --------------------------
 
