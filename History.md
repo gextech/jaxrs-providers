@@ -1,4 +1,11 @@
 
+0.0.4 / 2014-12-29
+==================
+
+  * added license header
+  * polish docs
+  * added more tests, fixed issue when trying to get the Errors Method
+
 0.0.3 / 2014-12-26
 ==================
 
