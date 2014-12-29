@@ -21,6 +21,8 @@ class DomainClassValidationExceptionMapperSpec extends Specification {
   Map entity
   @Shared
   DomainClassValidationExceptionMapper exceptionMapper
+  @Shared
+  Errors errors
 
   def setup() {
     entity = [
@@ -30,6 +32,10 @@ class DomainClassValidationExceptionMapperSpec extends Specification {
       extraData       : emptyMap(),
       i18nCode        : ""
     ]
+
+    errors = Spy(Errors)
+    errors.getFieldErrors() >> emptyList()
+    errors.getFieldErrors()
 
     def mockResponse = Mock(Response)
     mockResponse.getEntity() >> entity
@@ -44,7 +50,7 @@ class DomainClassValidationExceptionMapperSpec extends Specification {
   }
 
   @Unroll
-  def 'should create a Response with default values for #label'() {
+  def "should create a Response with default values for '#label'"() {
     given:
       def response = exceptionMapper.toResponse(new DomainClassValidationException(object))
     expect:
@@ -62,8 +68,6 @@ class DomainClassValidationExceptionMapperSpec extends Specification {
   def 'should create a Response when the object has errors field'() {
     setup:
       def object = new ObjectWithErrorsField()
-      Errors errors = Spy(Errors)
-      errors.getFieldErrors() >> emptyList()
       object.errors = errors
     when:
       def response = exceptionMapper.toResponse(new DomainClassValidationException(object))

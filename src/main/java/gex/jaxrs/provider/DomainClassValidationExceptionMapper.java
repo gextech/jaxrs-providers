@@ -46,6 +46,10 @@ public class DomainClassValidationExceptionMapper implements ExceptionMapper<Dom
   }
 
   private Errors getErrors(Object entity) {
+    if (entity instanceof Errors) {
+      return (Errors) entity;
+    }
+
     Errors errors = getErrorsFromField(entity);
 
     return errors != null ? errors : getErrorFromGetter(entity);
