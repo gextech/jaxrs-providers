@@ -4,7 +4,7 @@ jaxrs-providers
 ![logo](https://dl.dropboxusercontent.com/u/3942208/gex-jaxrs-providers.png "Logo")
 
 [![Build Status](https://img.shields.io/travis/gextech/jaxrs-providers/master.svg?style=flat)](https://travis-ci.org/gextech/jaxrs-providers)
-[![Coverage Status](https://img.shields.io/coveralls/gextech/jaxrs-providers.svg)](https://coveralls.io/r/gextech/jaxrs-providers?branch=master)
+[![Coverage Status](https://img.shields.io/coveralls/gextech/jaxrs-providers.svg?style=flat)](https://coveralls.io/r/gextech/jaxrs-providers?branch=master)
 [![Apache License 2](https://img.shields.io/badge/license-ASF2-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Download](https://api.bintray.com/packages/gextech/oss/jaxrs-providers/images/download.svg) ](https://bintray.com/gextech/oss/jaxrs-providers/_latestVersion)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gextech/jaxrs-providers?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
