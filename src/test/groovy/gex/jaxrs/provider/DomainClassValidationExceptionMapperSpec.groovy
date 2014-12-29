@@ -3,8 +3,10 @@ package gex.jaxrs.provider
 import gex.commons.exception.DomainClassValidationException
 import gex.jaxrs.ApiResponse
 import org.springframework.context.ApplicationContext
-import spock.lang.Ignore
+import org.springframework.validation.Errors
+import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import javax.ws.rs.core.Response
 
@@ -15,45 +17,70 @@ import static java.util.Collections.emptyMap
  * Created by domix on 12/23/14.
  */
 class DomainClassValidationExceptionMapperSpec extends Specification {
+  @Shared
+  Map entity
+  @Shared
+  DomainClassValidationExceptionMapper exceptionMapper
 
-  def 'should create a valid response with default message because the entity has no Errors'() {
-    setup:
-      def entity = [
-        message         : "The provided entity has some errors.",
-        validationErrors: emptyList(),
-        code            : "",
-        extraData       : emptyMap(),
-        i18nCode        : ""
-      ]
+  def setup() {
+    entity = [
+      message         : "The provided entity has some errors.",
+      validationErrors: emptyList(),
+      code            : "",
+      extraData       : emptyMap(),
+      i18nCode        : ""
+    ]
 
-      def mockResponse = Mock(Response)
-      mockResponse.getEntity() >> entity
-      mockResponse.getStatus() >> 422
-      ApiResponse apiResponse = Spy(ApiResponse)
-      apiResponse.buildResponse(_, _) >> mockResponse
-      ApplicationContext applicationContext = Mock(ApplicationContext)
+    def mockResponse = Mock(Response)
+    mockResponse.getEntity() >> entity
+    mockResponse.getStatus() >> 422
 
-      def e = new DomainClassValidationExceptionMapper(apiResponse: apiResponse, applicationContext: applicationContext)
+    ApiResponse apiResponse = Spy(ApiResponse)
+    apiResponse.buildResponse(_, _) >> mockResponse
 
-    when:
-      def response = e.toResponse(new DomainClassValidationException(new Object()))
+    ApplicationContext applicationContext = Mock(ApplicationContext)
 
-    then:
+    exceptionMapper = new DomainClassValidationExceptionMapper(apiResponse: apiResponse, applicationContext: applicationContext)
+  }
+
+  @Unroll
+  def 'should create a Response with default values for #label'() {
+    given:
+      def response = exceptionMapper.toResponse(new DomainClassValidationException(object))
+    expect:
       response
       response.entity == entity
       response.status == 422
+    where:
+      object                       | label
+      new Object()                 | 'generic Object'
+      new ObjectWithErrorsField()  | 'object with field'
+      new ObjectWithErrorsMethod() | 'object with method'
+
   }
 
-  @Ignore
-  def 'dds'() {
-    given:
-      def e = new DomainClassValidationExceptionMapper()
+  def 'should create a Response when the object has errors field'() {
+    setup:
+      def object = new ObjectWithErrorsField()
+      Errors errors = Spy(Errors)
+      errors.getFieldErrors() >> emptyList()
+      object.errors = errors
+    when:
+      def response = exceptionMapper.toResponse(new DomainClassValidationException(object))
+    then:
+      response
+  }
 
-      def domainClass = new DomainClass(name: null)
 
-      def exceptionn = new DomainClassValidationException(domainClass)
-      e.toResponse(exceptionn)
-    expect:
-      e
+}
+
+class ObjectWithErrorsField {
+  Errors errors
+}
+
+class ObjectWithErrorsMethod {
+  Errors getErrors() {
+    null
   }
 }
+

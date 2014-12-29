@@ -63,7 +63,7 @@ public class DomainClassValidationExceptionMapper implements ExceptionMapper<Dom
 
   private Errors getErrorFromGetter(Object entity) {
     Errors errors = null;
-    Method errorsMethod = findMethod(entity.getClass(), "getErrors", Errors.class);
+    Method errorsMethod = findMethod(entity.getClass(), "getErrors");
     if (errorsMethod != null) {
       makeAccessible(errorsMethod);
       errors = (Errors) invokeMethod(errorsMethod, entity);
