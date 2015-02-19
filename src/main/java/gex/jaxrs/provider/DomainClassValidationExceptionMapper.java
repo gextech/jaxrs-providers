@@ -36,9 +36,12 @@ import static org.springframework.util.ReflectionUtils.*;
 
 /**
  * Created by domix on 12/23/14.
+ * @deprecated As of release 0.0.6, replaced by {@link gex.jaxrs.provider.EntityValidationExceptionMapper}. This class will be deleted in 0.1 release.
+ * @todo Remove this class in release 0.1
  */
 @Slf4j
 @Provider
+@Deprecated
 public class DomainClassValidationExceptionMapper implements ExceptionMapper<DomainClassValidationException> {
   @Setter
   @Autowired
