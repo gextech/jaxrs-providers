@@ -22,7 +22,7 @@ buildscript {
   }
   dependencies {
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
-    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
+    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
   }
 }
 
@@ -49,7 +49,7 @@ repositories {
 }
 
 dependencies {
-  compile 'gex.commons:exceptions:0.1.3'
+  compile 'gex.commons:exceptions:0.1.4'
   compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
   compile 'org.springframework:spring-context:4.1.3.RELEASE'
   compile 'org.slf4j:slf4j-api:1.7.9'
@@ -135,8 +135,8 @@ publishing {
 }
 
 bintray {
-  user = project.hasProperty('bintray_user') ? bintray_user : ''
-  key = project.hasProperty('bintray_api_key') ? bintray_api_key : ''
+  user = project.hasProperty('bintrayUsername') ? bintrayUsername : ''
+  key = project.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
 
   publications = ['mavenJava']
   dryRun = false //Whether to run this as dry-run, without deploying
@@ -158,8 +158,8 @@ bintray {
       name = project.version
       desc = project.description
       gpg {
-        sign = project.hasProperty('gex_gpg_passphrase')
-        passphrase = project.hasProperty('gex_gpg_passphrase') ? gex_gpg_passphrase : ''
+        sign = project.hasProperty('bintrayGExGpgPassphrase')
+        passphrase = project.hasProperty('bintrayGExGpgPassphrase') ? bintrayGExGpgPassphrase : ''
       }
       mavenCentralSync {
         sync = false
