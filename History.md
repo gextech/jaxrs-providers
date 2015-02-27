@@ -1,4 +1,12 @@
 
+0.0.6 / 2015-02-27
+==================
+
+  * deprecating DomainClassValidationExceptionMapper
+  * added the ExceptionMapper for EntityValidationException
+  * upgraded to Gradle 2.3
+  * Upgraded to latest releases of Groovy, coveralls and exceptions module.
+
 0.0.5 / 2015-01-21
 ==================
 
