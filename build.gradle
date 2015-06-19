@@ -53,7 +53,7 @@ repositories {
 dependencies {
   compile 'gex.commons:exceptions:0.2.0'
   compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
-  compile 'org.springframework:spring-context:4.1.6.RELEASE'
+  compile 'org.springframework:spring-context:4.2.0.RC1'
   compile 'org.slf4j:slf4j-api:1.7.12'
 
   testCompile "org.codehaus.groovy:groovy-all:${project.groovyVersion}"
